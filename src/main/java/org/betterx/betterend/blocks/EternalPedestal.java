@@ -1,6 +1,5 @@
 package org.betterx.betterend.blocks;
 
-import de.ambertation.wunderlib.math.Float3;
 import org.betterx.bclib.behaviours.interfaces.BehaviourStone;
 import org.betterx.bclib.interfaces.ClientLevelAccess;
 import org.betterx.betterend.blocks.basis.PedestalBlock;
@@ -38,6 +37,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 
 import com.google.common.collect.Lists;
+import org.joml.Vector3f;
 
 import java.util.List;
 
@@ -176,20 +176,20 @@ public class EternalPedestal extends PedestalBlock implements BehaviourStone {
                     ) {
                         final boolean powerUp = ritual.willActivate();
                         final boolean inX = ritual.getAxis() == Direction.Axis.X;
-                        final var start = Float3.of(blockPos);
-                        final var center = Float3.of(ritual.getCenter());
+                        final var start = new Vector3f(blockPos.getX(), blockPos.getY(), blockPos.getZ());
+                        final var center = new Vector3f(ritual.getCenter().getX(), ritual.getCenter().getY(), ritual.getCenter().getZ()).add(0.5f, 0.5f, 0.5f);
                         final var dir = center
                                 .sub(start)
-                                .normalized()
-                                .mul(powerUp ? 0.2 : 0.05);
+                                .normalize()
+                                .mul(powerUp ? 0.2f : 0.05f);
                         float[] color = EternalCrystalRenderer.colors(PedestalItemRenderer.getGemAge());
 
                         if (powerUp) {
                             for (int i = 0; i < 30; i++) {
-                                Float3 rnd = Float3.of(
-                                        random.nextFloat() * 0.3 - 0.15,
-                                        random.nextFloat() * -0.1,
-                                        random.nextFloat() * 0.3 - 0.15
+                                var rnd = new Vector3f(
+                                        random.nextFloat() * 0.3f - 0.15f,
+                                        random.nextFloat() * -0.1f,
+                                        random.nextFloat() * 0.3f - 0.15f
                                 ).sub(dir);
                                 SimpleParticleType particleOptions = ParticleTypes.GLOW;
                                 final Particle particle = clientLevel.bcl_addParticle(
@@ -211,10 +211,10 @@ public class EternalPedestal extends PedestalBlock implements BehaviourStone {
                                 powerUp ? 20 : 2,
                                 powerUp ? 40 : 10
                         ); i++) {
-                            Float3 rnd = Float3.of(
-                                    random.nextFloat() * 0.3 - 0.15,
-                                    random.nextFloat() * -0.1,
-                                    random.nextFloat() * 0.3 - 0.15
+                            var rnd = new Vector3f(
+                                    random.nextFloat() * 0.3f - 0.15f,
+                                    random.nextFloat() * -0.1f,
+                                    random.nextFloat() * 0.3f - 0.15f
                             ).add(dir.mul(powerUp ? random.nextFloat() * 4 : 1));
                             SimpleParticleType particleOptions = ParticleTypes.EFFECT;
                             final Particle particle = clientLevel.bcl_addParticle(
